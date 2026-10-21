@@ -1,21 +1,19 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
-import ProjectsPage from './pages/ProjectsPage.jsx';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AppLayout from './components/AppLayout.jsx';
 import ProjectDetailsPage from './pages/ProjectDetailsPage.jsx';
+import ProjectsPage from './pages/ProjectsPage.jsx';
+import './styles.css';
 
 function App() {
   return (
-    <>
-      <nav>
-        <Link to="/">Projects</Link>{' | '}
-        <Link to="/projects/example">Project details</Link>
-      </nav>
+    <AppLayout>
       <Routes>
         <Route path="/" element={<ProjectsPage />} />
         <Route path="/projects/:projectId" element={<ProjectDetailsPage />} />
       </Routes>
-    </>
+    </AppLayout>
   );
 }
 
