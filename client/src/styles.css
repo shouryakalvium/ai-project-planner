@@ -70,6 +70,25 @@ h3 { font-size: 17px; margin-bottom: 8px; }
 .empty-state { background: var(--surface); border: 1px dashed #cbd5e2; border-radius: 14px; margin: 20px auto; max-width: 620px; padding: 70px 30px; text-align: center; }
 .empty-icon { align-items: center; background: var(--blue-soft); border-radius: 12px; color: var(--blue); display: flex; font-size: 24px; height: 48px; justify-content: center; margin: 0 auto 18px; width: 48px; }
 .empty-state p { color: var(--muted); margin: 0 auto 24px; max-width: 390px; }
+.loading-message, .message-state { color: var(--muted); text-align: center; }
+.message-state { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; margin: 20px auto; max-width: 620px; padding: 42px 30px; }
+.message-state h1 { font-size: 30px; }
+.message-state p { margin-bottom: 22px; }
+.modal-backdrop { align-items: center; background: rgba(25, 37, 56, 0.42); display: flex; inset: 0; justify-content: center; padding: 20px; position: fixed; z-index: 10; }
+.project-modal { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 24px 70px rgba(26, 43, 70, 0.2); max-height: calc(100vh - 40px); max-width: 580px; overflow-y: auto; padding: 28px; width: 100%; }
+.modal-heading { align-items: flex-start; display: flex; justify-content: space-between; margin-bottom: 24px; }
+.modal-heading h2 { margin-bottom: 0; }
+.modal-close { background: transparent; border: 0; color: var(--muted); font-size: 26px; line-height: 1; padding: 0 2px; }
+.modal-close:hover { color: var(--ink); }
+.form-field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+.form-field > span { font-size: 13px; font-weight: 700; }
+.form-field input, .form-field textarea, .form-field select { background: #fbfcfe; border: 1px solid #cbd5e2; border-radius: 8px; color: var(--ink); font: inherit; font-size: 14px; padding: 11px 12px; width: 100%; }
+.form-field textarea { min-height: 100px; resize: vertical; }
+.form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: var(--blue); outline: 2px solid var(--blue-soft); }
+.form-row { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+.form-error { background: #fff0ef; border-radius: 7px; color: #b33a32; font-size: 13px; margin: 4px 0 18px; padding: 10px 12px; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.button:disabled, .modal-close:disabled { cursor: not-allowed; opacity: 0.6; }
 .back-link { color: var(--muted); display: inline-flex; font-size: 13px; font-weight: 600; gap: 8px; margin-bottom: 28px; }
 .back-link:hover { color: var(--ink); }
 .detail-header { border-bottom: 1px solid var(--line); padding-bottom: 34px; }
@@ -111,4 +130,6 @@ h3 { font-size: 17px; margin-bottom: 8px; }
   .card-footer .button { width: 100%; }
   .detail-topline { align-items: flex-start; flex-direction: column-reverse; }
   .detail-meta { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  .project-modal { padding: 22px; }
 }

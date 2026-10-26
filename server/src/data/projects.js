@@ -1,4 +1,4 @@
-export const projects = [
+const projects = [
   {
     id: 'ai-project-planner',
     name: 'AI Project Planner',
@@ -37,3 +37,5 @@ export const projects = [
     ],
   },
 ];
+
+module.exports = projects;
