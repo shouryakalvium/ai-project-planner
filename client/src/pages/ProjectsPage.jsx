@@ -186,7 +186,7 @@ export default function ProjectsPage() {
                 </div>
               </div>
               <div className="card-footer">
-                <span className="due-date">{project.tasks.filter((task) => task.complete).length} of {project.tasks.length} tasks complete</span>
+                <span className="due-date">{project.tasks.filter((task) => task.status === 'Complete').length} of {project.tasks.length} tasks complete</span>
                 <Link className="button button-secondary" to={`/projects/${project.id}`}>Open project -&gt;</Link>
               </div>
             </article>
