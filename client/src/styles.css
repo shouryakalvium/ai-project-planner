@@ -100,6 +100,8 @@ h3 { font-size: 17px; margin-bottom: 8px; }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; }
 .panel-heading { align-items: baseline; border-bottom: 1px solid #eef1f5; display: flex; justify-content: space-between; margin-bottom: 4px; padding-bottom: 17px; }
 .panel-heading span { color: var(--muted); font-size: 12px; }
+.panel-heading-actions { align-items: center; display: flex; gap: 12px; }
+.panel-heading-actions .button { font-size: 12px; padding: 8px 11px; }
 .task-list, .milestone-list { list-style: none; margin: 0; padding: 0; }
 .task-item, .milestone-item { align-items: center; border-bottom: 1px solid #eef1f5; display: flex; gap: 12px; padding: 16px 0; }
 .task-item:last-child, .milestone-item:last-child { border-bottom: 0; padding-bottom: 0; }
@@ -108,6 +110,15 @@ h3 { font-size: 17px; margin-bottom: 8px; }
 .check.done { background: var(--green); border-color: var(--green); }
 .task-title { font-size: 14px; }
 .task-title.done { color: var(--muted); text-decoration: line-through; }
+.task-item .check { background: transparent; padding: 0; }
+.item-copy { display: flex; flex: 1; flex-direction: column; gap: 3px; min-width: 0; }
+.item-meta { color: var(--muted); font-size: 12px; }
+.item-meta .status { font-size: 10px; margin-right: 6px; padding: 3px 6px; }
+.item-actions { display: flex; gap: 9px; }
+.text-button { background: transparent; border: 0; color: var(--blue); font-size: 12px; font-weight: 700; padding: 3px; }
+.text-button.danger { color: #b33a32; }
+.empty-panel { color: var(--muted); font-size: 14px; padding: 18px 0; }
+.action-error { margin: 20px 0 0; }
 .milestone-item { align-items: flex-start; }
 .milestone-dot { background: #d8e2f1; border: 4px solid #f2f6fc; border-radius: 50%; flex: 0 0 16px; height: 16px; margin-top: 3px; }
 .milestone-dot.done { background: var(--green); }
@@ -132,4 +143,7 @@ h3 { font-size: 17px; margin-bottom: 8px; }
   .detail-meta { align-items: flex-start; flex-direction: column; gap: 4px; }
   .form-row { grid-template-columns: 1fr; gap: 0; }
   .project-modal { padding: 22px; }
+  .panel-heading-actions { align-items: flex-end; flex-direction: column; gap: 6px; }
+  .panel-heading-actions .button { width: 100%; }
+  .item-actions { align-items: flex-end; flex-direction: column; gap: 2px; }
 }

@@ -54,7 +54,7 @@ function createProject(input) {
 }
 
 function getProjects() {
-  return projectStore.listProjects();
+  return projectStore.listProjects().map(withProgress);
 }
 
 function getProject(projectId) {
@@ -63,6 +63,15 @@ function getProject(projectId) {
     throw createClientError(`Project not found: ${projectId}`, 404);
   }
 
+  return withProgress(project);
+}
+
+function withProgress(project) {
+  const completedTasks = project.tasks.filter((task) => task.status === 'Complete').length;
+  const progress = project.tasks.length === 0
+    ? 0
+    : Math.round((completedTasks / project.tasks.length) * 100);
+  project.progress = progress;
   return project;
 }
 
@@ -70,4 +79,6 @@ module.exports = {
   getProjects,
   getProject,
   createProject,
+  createClientError,
+  withProgress,
 };
