@@ -1,9 +1,17 @@
 # High-Level Design
 
-## Current Architecture
+## Architecture
 
 The React frontend communicates over HTTP with the Node.js and Express backend.
 
-The backend will use PostgreSQL for relational project and task data. MongoDB will later store saved AI-generated plans, and an LLM API will later generate structured project plans.
+The backend is organized into layers:
 
-The current dashboard reads and creates project data through Express over HTTP. The API uses in-memory data until the PostgreSQL data layer is implemented, so new projects last only for the lifetime of the server process. No database connections or LLM integration are present yet.
+- `server.js` loads dotenv configuration and starts the HTTP server.
+- `app.js` configures Express middleware and mounts the API routes.
+- Routes map HTTP paths to controllers without containing business rules.
+- Controllers translate requests into service calls and send HTTP responses.
+- Services contain project validation, ID generation, and project business logic.
+- The data-access module exposes the current in-memory project store.
+- Middleware handles request logging, unknown routes, and centralized errors.
+
+The current dashboard reads and creates project data through Express over HTTP. Project data remains in memory, so created projects are lost when the server restarts. PostgreSQL, MongoDB, and LLM integrations are not connected or implemented yet.
