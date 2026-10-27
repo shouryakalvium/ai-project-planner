@@ -13,19 +13,23 @@ and monitor progress from the project workspace.
   - View all projects and open an individual project workspace.
   - Create projects with a name, description, status, and due date.
   - Use the supported project statuses: `Planning`, `In progress`, and `Complete`.
+
 - **Task management**
   - Create, edit, complete, reopen, and delete tasks.
   - Track title, optional description, status, priority, and optional due date.
   - New tasks default to `Todo` status and `Medium` priority.
+
 - **Milestone management**
   - Create, edit, and delete project checkpoints.
   - Track title, optional description, status, and optional target date.
   - Milestones are explicitly managed by the user and are not automatically
     generated as tasks or by AI.
+
 - **Progress tracking**
   - Project progress is calculated from task completion:
     `completed tasks / total tasks * 100`.
   - A project with no tasks has `0%` progress.
+
 - **Validation and feedback**
   - The API returns clear `400` validation errors and `404` resource errors.
   - The UI provides loading, empty, save, error, and delete-confirmation states.
