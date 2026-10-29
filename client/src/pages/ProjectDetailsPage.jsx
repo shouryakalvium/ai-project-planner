@@ -83,6 +83,7 @@ export default function ProjectDetailsPage() {
   const [formError, setFormError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [actionError, setActionError] = useState('');
+  const [activeTab, setActiveTab] = useState('tasks');
 
   async function loadProject(showLoading = true) {
     if (showLoading) setIsLoading(true);
@@ -138,26 +139,37 @@ export default function ProjectDetailsPage() {
   if (error || !project) return <section><Link className="back-link" to="/">&lt;- Back to projects</Link><div className="message-state" role="alert"><h1>Project unavailable</h1><p>{error || 'This project could not be found.'}</p><button className="button button-secondary" type="button" onClick={() => loadProject()}>Try again</button></div></section>;
 
   const completedTasks = project.tasks.filter((task) => task.status === 'Complete').length;
+  const completedMilestones = project.milestones.filter((milestone) => milestone.status === 'Complete').length;
   return (
     <section>
       <Link className="back-link" to="/">&lt;- Back to projects</Link>
       <div className="detail-header">
         <div className="detail-topline"><div><p className="eyebrow">Project workspace</p><h1>{project.name}</h1></div><span className={statusClass(project.status)}>{project.status}</span></div>
         <p className="detail-summary">{project.description}</p>
-        <div className="detail-progress"><div className="progress-label"><span>Overall progress</span><span className="progress-value">{project.progress}%</span></div><div className="progress-track" aria-label={`${project.progress}% complete`}><div className="progress-fill" style={{ width: `${project.progress}%` }} /></div><div className="detail-meta"><span>{completedTasks} of {project.tasks.length} tasks complete</span><span>Due {project.dueDate}</span></div></div>
+        <div className="detail-progress"><div className="progress-label"><span>Overall progress</span><span className="progress-value">{project.progress}%</span></div><div className="progress-track" aria-label={`${project.progress}% complete`}><div className="progress-fill" style={{ width: `${project.progress}%` }} /></div><div className="detail-meta"><span>{completedTasks} of {project.tasks.length} tasks complete</span><span>{completedMilestones} of {project.milestones.length} milestones complete</span><span>Due {project.dueDate}</span></div></div>
       </div>
       {actionError && <p className="form-error action-error" role="alert">{actionError}</p>}
+      <div className="workspace-tabs" role="tablist" aria-label="Project workspace sections">
+        <button className={activeTab === 'tasks' ? 'workspace-tab active' : 'workspace-tab'} type="button" role="tab" aria-selected={activeTab === 'tasks'} onClick={() => setActiveTab('tasks')}>
+          <span>Tasks</span><small>{project.tasks.length}</small>
+        </button>
+        <button className={activeTab === 'milestones' ? 'workspace-tab active' : 'workspace-tab'} type="button" role="tab" aria-selected={activeTab === 'milestones'} onClick={() => setActiveTab('milestones')}>
+          <span>Milestones</span><small>{project.milestones.length}</small>
+        </button>
+      </div>
       <div className="detail-layout">
-        <section className="panel" aria-labelledby="tasks-heading">
-          <div className="panel-heading"><h2 id="tasks-heading">Tasks</h2><div className="panel-heading-actions"><span>{project.tasks.length} items</span><button className="button button-primary" type="button" onClick={() => openForm('task')}>+ Add task</button></div></div>
+        {activeTab === 'tasks' && <section className="panel" aria-labelledby="tasks-heading" role="tabpanel">
+          <div className="panel-heading"><div><p className="panel-kicker">Execution</p><h2 id="tasks-heading">Tasks</h2></div><div className="panel-heading-actions"><span>{completedTasks}/{project.tasks.length} done</span><button className="button button-primary" type="button" onClick={() => openForm('task')}>+ Add task</button></div></div>
           {project.tasks.length === 0 && <p className="empty-panel">No tasks yet. Add the first task to start tracking progress.</p>}
           <ul className="task-list">{project.tasks.map((task) => <li className="task-item" key={task.id}><button className={task.status === 'Complete' ? 'check done' : 'check'} type="button" onClick={() => toggleTask(task)} aria-label={task.status === 'Complete' ? `Reopen ${task.title}` : `Complete ${task.title}`}>{task.status === 'Complete' ? '✓' : ''}</button><div className="item-copy"><span className={task.status === 'Complete' ? 'task-title done' : 'task-title'}>{task.title}</span><span className="item-meta">{task.priority} priority{task.dueDate && ` · Due ${task.dueDate}`}</span></div><div className="item-actions"><button className="text-button" type="button" onClick={() => openForm('task', task)}>Edit</button><button className="text-button danger" type="button" onClick={() => removeItem('task', task)}>Delete</button></div></li>)}</ul>
         </section>
-        <section className="panel" aria-labelledby="milestones-heading">
-          <div className="panel-heading"><h2 id="milestones-heading">Milestones</h2><div className="panel-heading-actions"><span>{project.milestones.length} checkpoints</span><button className="button button-primary" type="button" onClick={() => openForm('milestone')}>+ Add milestone</button></div></div>
+        }
+        {activeTab === 'milestones' && <section className="panel" aria-labelledby="milestones-heading" role="tabpanel">
+          <div className="panel-heading"><div><p className="panel-kicker">Key outcomes</p><h2 id="milestones-heading">Milestones</h2></div><div className="panel-heading-actions"><span>{completedMilestones}/{project.milestones.length} done</span><button className="button button-primary" type="button" onClick={() => openForm('milestone')}>+ Add milestone</button></div></div>
           {project.milestones.length === 0 && <p className="empty-panel">No milestones yet. Add a checkpoint for an important project outcome.</p>}
           <ul className="milestone-list">{project.milestones.map((milestone) => <li className="milestone-item" key={milestone.id}><span className={milestone.status === 'Complete' ? 'milestone-dot done' : 'milestone-dot'} /><div className="item-copy"><strong>{milestone.title}</strong><span className="item-meta"><span className={statusClass(milestone.status)}>{milestone.status}</span>{milestone.targetDate ? ` Target ${milestone.targetDate}` : ' No target date'}</span></div><div className="item-actions"><button className="text-button" type="button" onClick={() => openForm('milestone', milestone)}>Edit</button><button className="text-button danger" type="button" onClick={() => removeItem('milestone', milestone)}>Delete</button></div></li>)}</ul>
         </section>
+        }
       </div>
       {formType && <ItemForm type={formType} value={form} error={formError} isSaving={isSaving} onChange={handleChange} onClose={() => !isSaving && setFormType('')} onSubmit={handleSubmit} />}
     </section>
