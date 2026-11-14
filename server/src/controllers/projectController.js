@@ -1,15 +1,15 @@
 const projectService = require('../services/projectService');
 
-function listProjects(request, response) {
-  response.status(200).json(projectService.getProjects());
+async function listProjects(request, response) {
+  response.status(200).json(await projectService.getProjects());
 }
 
-function getProject(request, response) {
-  response.status(200).json(projectService.getProject(request.params.projectId));
+async function getProject(request, response) {
+  response.status(200).json(await projectService.getProject(request.params.projectId));
 }
 
-function createProject(request, response) {
-  response.status(201).json(projectService.createProject(request.body));
+async function createProject(request, response) {
+  response.status(201).json(await projectService.createProject(request.body));
 }
 
 module.exports = {

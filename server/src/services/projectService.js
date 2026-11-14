@@ -26,7 +26,7 @@ function validateProjectInput(input) {
   return { name, description, status, dueDate };
 }
 
-function createProject(input) {
+async function createProject(input) {
   const { name, description, status, dueDate } = validateProjectInput(input);
   const idBase = name
     .trim()
@@ -36,7 +36,7 @@ function createProject(input) {
 
   let id = idBase;
   let suffix = 2;
-  while (projectStore.findProjectById(id)) {
+  while (await projectStore.findProjectById(id)) {
     id = `${idBase}-${suffix}`;
     suffix += 1;
   }
@@ -53,12 +53,12 @@ function createProject(input) {
   });
 }
 
-function getProjects() {
-  return projectStore.listProjects().map(withProgress);
+async function getProjects() {
+  return (await projectStore.listProjects()).map(withProgress);
 }
 
-function getProject(projectId) {
-  const project = projectStore.findProjectById(projectId);
+async function getProject(projectId) {
+  const project = await projectStore.findProjectById(projectId);
   if (!project) {
     throw createClientError(`Project not found: ${projectId}`, 404);
   }
