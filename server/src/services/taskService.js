@@ -39,23 +39,23 @@ function validateTaskInput(input, partial = false) {
   };
 }
 
-function getProject(projectId) {
+async function getProject(projectId) {
   return projectService.getProject(projectId);
 }
 
-function listTasks(projectId) {
-  return getProject(projectId).tasks;
+async function listTasks(projectId) {
+  return (await getProject(projectId)).tasks;
 }
 
-function getTask(projectId, taskId) {
-  const project = getProject(projectId);
-  const task = projectStore.findTaskById(project, taskId);
+async function getTask(projectId, taskId) {
+  const project = await getProject(projectId);
+  const task = await projectStore.findTaskById(project, taskId);
   if (!task) throw projectService.createClientError(`Task not found: ${taskId}`, 404);
   return task;
 }
 
-function createTask(projectId, input) {
-  const project = getProject(projectId);
+async function createTask(projectId, input) {
+  const project = await getProject(projectId);
   const values = validateTaskInput(input);
   const task = {
     id: randomUUID(),
@@ -65,27 +65,28 @@ function createTask(projectId, input) {
     priority: values.priority || 'Medium',
     dueDate: values.dueDate || '',
   };
-  projectStore.addTask(project, task);
+  await projectStore.addTask(project, task);
   projectService.withProgress(project);
   return task;
 }
 
-function updateTask(projectId, taskId, input) {
-  const project = getProject(projectId);
-  const task = projectStore.findTaskById(project, taskId);
+async function updateTask(projectId, taskId, input) {
+  const project = await getProject(projectId);
+  const task = await projectStore.findTaskById(project, taskId);
   if (!task) throw projectService.createClientError(`Task not found: ${taskId}`, 404);
   const values = validateTaskInput(input, true);
   Object.assign(task, values);
+  await projectStore.updateTask(project, task);
   projectService.withProgress(project);
   return task;
 }
 
-function deleteTask(projectId, taskId) {
-  const project = getProject(projectId);
-  if (!projectStore.findTaskById(project, taskId)) {
+async function deleteTask(projectId, taskId) {
+  const project = await getProject(projectId);
+  if (!await projectStore.findTaskById(project, taskId)) {
     throw projectService.createClientError(`Task not found: ${taskId}`, 404);
   }
-  projectStore.removeTask(project, taskId);
+  await projectStore.removeTask(project, taskId);
   projectService.withProgress(project);
 }
 

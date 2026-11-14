@@ -7,7 +7,7 @@ extension points reserved for the product vision. The implementation is a
 small full-stack web application: a React frontend communicates with a
 Node.js/Express backend over HTTP.
 
-The current release uses an in-memory store. No external database, AI service,
+The current release uses PostgreSQL for project data. No AI service,
 authentication provider, or user identity system is connected.
 
 ## 2. System architecture
@@ -20,7 +20,7 @@ authentication provider, or user identity system is connected.
                                                 │          → Data access   │
                                                 └─────────────┬────────────┘
                                                               │
-                                                   In-memory project store
+                                                   PostgreSQL project store
 ```
 
 ### Frontend
@@ -40,7 +40,7 @@ authentication provider, or user identity system is connected.
 - Controllers translate HTTP requests into service calls and responses.
 - Services validate inputs, enforce business rules, verify parent ownership,
   generate IDs, and calculate progress.
-- Data access exposes the in-memory boundary without HTTP concerns.
+- Data access exposes the PostgreSQL boundary without HTTP concerns.
 
 ## 3. Core domain model
 
@@ -102,14 +102,14 @@ editable and is never hardcoded as a separate source of truth.
 
 ## 6. Future architecture
 
-The data-access boundary allows the in-memory implementation to be replaced by
-a PostgreSQL-backed repository for transactional project data. A separate
-future AI-plan persistence boundary may use MongoDB for generated plan
-documents. An AI service should remain behind an explicit service boundary and
-must not directly mutate project state without user confirmation.
+The data-access boundary uses PostgreSQL for project, task, and milestone
+records. A separate future AI-plan persistence boundary may use MongoDB for
+generated plan documents. An AI service should remain behind an explicit
+service boundary and must not directly mutate project state without user
+confirmation.
 
 ## 7. Data lifetime and limitations
 
-All current data is stored in process memory. Projects, tasks, milestones, and
-updates are lost when the server restarts. This is intentional for the current
-foundation and must be replaced with persistence before production use.
+PostgreSQL data persists across server restarts. The backend initializes the
+required tables on startup and seeds the sample data only when the database has
+no projects.
