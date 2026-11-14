@@ -1,8 +1,8 @@
 node_modules/
-.env
-.env.*
 !.env.example
+!server/.env.example
 dist/
 build/
 coverage/
 *.log
+config.bat

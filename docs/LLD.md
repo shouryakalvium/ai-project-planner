@@ -18,7 +18,7 @@ server/
     routes/                     HTTP route definitions
     controllers/                HTTP request/response handlers
     services/                   Validation and business rules
-    data/                       In-memory data-access boundary
+    data/                       PostgreSQL data-access boundary
     middleware/                 Logging, 404, and error handling
 ```
 
@@ -148,18 +148,20 @@ bodies, interprets non-2xx responses, and handles `204` deletion responses.
 
 ## 8. Storage boundary
 
-`server/src/data/projectStore.js` currently wraps the in-memory project array
-with operations for projects, tasks, and milestones. Services call this module
-instead of changing arrays directly. This boundary is the replacement point
-for a future persistent repository.
+`server/src/data/projectStore.js` wraps PostgreSQL tables for projects, tasks,
+and milestones. `server/src/data/database.js` owns the connection pool.
+Services call the store asynchronously instead of changing records directly.
+Tables are initialized at startup and sample data is inserted only into an
+empty database.
 
-The current implementation has no database migrations, transactions,
-authentication, or durable storage. All data is lost on server restart.
+The current implementation has no versioned database migrations, transactions,
+authentication, or user isolation. The database connection is configured with
+`DATABASE_URL` (or the standard PostgreSQL environment variables).
 
 ## 9. Future implementation sequence
 
 1. Add automated API tests around the current contracts.
-2. Introduce a persistent project/task/milestone repository.
+2. Add versioned schema migrations and transactions.
 3. Add authentication and authorization before multi-user access.
 4. Add an explicit AI planning service and persisted generated-plan model.
 5. Add user approval workflows before AI suggestions affect project data.
