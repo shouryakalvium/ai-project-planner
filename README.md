@@ -37,14 +37,12 @@ and monitor progress from the project workspace.
 ## Technology stack
 
 - **Frontend:** React 19, React Router, Vite, CSS
-- **Backend:** Node.js, Express 5, dotenv
-- **Storage:** In-memory JavaScript data store
+- **Backend:** Node.js, Express 5, dotenv, node-postgres
+- **Storage:** PostgreSQL
 - **Communication:** REST-style HTTP API under `/api`
 
-PostgreSQL, MongoDB, authentication, and AI/LLM integration are future
-capabilities. They are intentionally not part of the current implementation.
-Because storage is in memory, projects, tasks, milestones, and changes are
-lost when the server restarts.
+MongoDB, authentication, and AI/LLM integration remain future capabilities.
+PostgreSQL stores projects, tasks, and milestones durably.
 
 ## Repository structure
 
@@ -59,7 +57,7 @@ The backend layers are:
 1. **Routes** map HTTP methods and paths to controllers.
 2. **Controllers** handle HTTP request and response concerns.
 3. **Services** enforce validation and business rules.
-4. **Data access** isolates the in-memory store from HTTP handling.
+4. **Data access** isolates the PostgreSQL store from HTTP handling.
 5. **Middleware** handles logging, unknown routes, and centralized errors.
 
 ## Running locally
@@ -73,6 +71,18 @@ npm install
 cd ../client
 npm install
 ```
+
+Configure PostgreSQL before starting the backend:
+
+```bash
+cd ../server
+copy .env.example .env
+# Set DATABASE_URL in .env to your PostgreSQL connection string.
+```
+
+The backend creates its tables on startup and seeds the sample projects only
+when the database is empty. It does not fall back to in-memory storage if
+PostgreSQL is unavailable.
 
 Start the backend in one terminal:
 
@@ -97,6 +107,7 @@ environment variable.
 ```bash
 # Backend syntax checks
 node --check server/src/app.js
+node --check server/src/data/projectStore.js
 
 # Frontend production build
 cd client

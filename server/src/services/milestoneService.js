@@ -34,23 +34,23 @@ function validateMilestoneInput(input, partial = false) {
   };
 }
 
-function getProject(projectId) {
+async function getProject(projectId) {
   return projectService.getProject(projectId);
 }
 
-function listMilestones(projectId) {
-  return getProject(projectId).milestones;
+async function listMilestones(projectId) {
+  return (await getProject(projectId)).milestones;
 }
 
-function getMilestone(projectId, milestoneId) {
-  const project = getProject(projectId);
-  const milestone = projectStore.findMilestoneById(project, milestoneId);
+async function getMilestone(projectId, milestoneId) {
+  const project = await getProject(projectId);
+  const milestone = await projectStore.findMilestoneById(project, milestoneId);
   if (!milestone) throw projectService.createClientError(`Milestone not found: ${milestoneId}`, 404);
   return milestone;
 }
 
-function createMilestone(projectId, input) {
-  const project = getProject(projectId);
+async function createMilestone(projectId, input) {
+  const project = await getProject(projectId);
   const values = validateMilestoneInput(input);
   const milestone = {
     id: randomUUID(),
@@ -59,25 +59,26 @@ function createMilestone(projectId, input) {
     targetDate: values.targetDate || '',
     status: values.status || 'Planned',
   };
-  projectStore.addMilestone(project, milestone);
+  await projectStore.addMilestone(project, milestone);
   return milestone;
 }
 
-function updateMilestone(projectId, milestoneId, input) {
-  const project = getProject(projectId);
-  const milestone = projectStore.findMilestoneById(project, milestoneId);
+async function updateMilestone(projectId, milestoneId, input) {
+  const project = await getProject(projectId);
+  const milestone = await projectStore.findMilestoneById(project, milestoneId);
   if (!milestone) throw projectService.createClientError(`Milestone not found: ${milestoneId}`, 404);
   const values = validateMilestoneInput(input, true);
   Object.assign(milestone, values);
+  await projectStore.updateMilestone(project, milestone);
   return milestone;
 }
 
-function deleteMilestone(projectId, milestoneId) {
-  const project = getProject(projectId);
-  if (!projectStore.findMilestoneById(project, milestoneId)) {
+async function deleteMilestone(projectId, milestoneId) {
+  const project = await getProject(projectId);
+  if (!await projectStore.findMilestoneById(project, milestoneId)) {
     throw projectService.createClientError(`Milestone not found: ${milestoneId}`, 404);
   }
-  projectStore.removeMilestone(project, milestoneId);
+  await projectStore.removeMilestone(project, milestoneId);
 }
 
 module.exports = {
